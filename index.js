@@ -36,6 +36,19 @@ app.get("/home", (req, res) => {
   res.send("<h1>home route</h1>");
 });
 
+app.get("/user",async(req,res)=>{
+
+  try{
+    const users= await User.find();
+    res.json({success:true,users});
+
+  }catch(e){
+    console.log(e);
+    res.json({success:false,message:"something went wrong"})
+  }
+})
+
+
 app.post("/user", async(req, res) => {
 
   const {email,password,mobile,name}= req.body;
@@ -52,25 +65,44 @@ app.post("/user", async(req, res) => {
 
   }catch(e){
     console.log(e);
-    res.json({success:false,message:"something went wrong"})
-  }
-
-
-
- 
+    res.json({success:false,message:"something went wrong"});
+  } 
 
   
-  res.send("<h1>hello how r u</h1>");
 });
 
-app.delete("/user", (req, res) => {
-  res.send("tata");
+app.patch("/user/:id", async(req, res) => {
+
+  try{
+
+    const id=req.params.id;
+    const user= await User.findByIdAndUpdate(id,req.body,{new:true});
+    
+    res.json({success:true,user});
+
+  }catch(e){
+    console.log(e);
+
+    
+  }
+})
+
+app.delete("/user/:id", async(req, res) => {
+  
+  try{
+    const id=req.params.id;
+    const user= await User.findByIdAndDelete(id);
+    res.json({success:true,user});
+  }catch(e){
+  console.log(e);
+  res.json({success:false,message:"something went wrong"});
+  }
 });
 
 app.get("/", (req, res) => {
   res.send("<h1>byeee</h1>");
 });
 
-app.listen(5000, function () {
-  console.log("server is running on port 5000");
+app.listen(6000, function () {
+  console.log("server is running on port 6000");
 });
